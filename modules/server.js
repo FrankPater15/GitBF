@@ -20,6 +20,7 @@ class Server {
         this.authPath = '/api/auth';
         this.clientesPath = '/api/clientes'; // Nueva ruta para clientes
         this.empleadosPath = '/api/empleados'; // Nueva ruta para empleados
+        this.citasPath = '/api/citas'; // Nueva ruta para empleados
 
         // Middlewares y rutas
         this.middlewares();
@@ -56,6 +57,8 @@ class Server {
         this.app.use(this.authPath, require('../routes/auth'));
         this.app.use(this.clientesPath, require('../routes/clienteRoutes')); // Usar la ruta de clientes
         this.app.use(this.empleadosPath, require('../routes/empleadoRoutes')); // Usar la ruta de empleados
+        this.app.use(this.citasPath, require('../routes/citaRoutes')); // Agregar ruta para citas
+
     }
 
     async connectDb() {

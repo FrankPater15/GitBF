@@ -4,27 +4,34 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 class Server {
-
     constructor() {
         this.app = express();
-        this.port = process.env.PORT;
+        this.port = process.env.PORT || 5000;
 
         // Definición de rutas
         this.usuariosPath = '/api/usuarios';
         this.rolesPath = '/api/roles';
         this.permisosPath = '/api/permisos';
         this.tiposerviciosPath = '/api/tiposervicios';
+        this.proveedorPath = '/api/proveedores';  // Proveedor
         this.serviciosPath = '/api/servicios';
         this.detalleserviciosPath = '/api/detalleservicios';
         this.ventaserviciosPath = '/api/ventaservicios';
         this.authPath = '/api/auth';
+        this.compraPath = '/api/compras';         // Compra
+        this.bajaProductoPath = '/api/bajas';     // Baja de productos
+        this.insumoPath = '/api/insumos';         // Insumo
         this.clientesPath = '/api/clientes'; // Nueva ruta para clientes
         this.empleadosPath = '/api/empleados'; // Nueva ruta para empleados
         this.citasPath = '/api/citas'; // Nueva ruta para empleados
 
-        // Middlewares y rutas
+        // Middlewares
         this.middlewares();
+
+        // Rutas de la aplicación
         this.routes();
+
+        // Conectar a la base de datos
         this.connectDb();
     }
 
@@ -40,13 +47,15 @@ class Server {
             origin: '*',
         }));
 
-        this.app.use(bodyParser.json()); // for parsing application/json
+        // Parsing del body en JSON
+        this.app.use(bodyParser.json());
 
+        // Servir directorio público
         this.app.use(express.static(__dirname + "/public"));
     }
 
     routes() {
-        // Definición de rutas
+        // Rutas de usuarios, roles, permisos, servicios, etc.
         this.app.use(this.usuariosPath, require('../routes/usuarios'));
         this.app.use(this.rolesPath, require('../routes/roles'));
         this.app.use(this.permisosPath, require('../routes/permisos'));
@@ -55,10 +64,13 @@ class Server {
         this.app.use(this.detalleserviciosPath, require('../routes/detalleservicios'));
         this.app.use(this.ventaserviciosPath, require('../routes/ventaservicios'));
         this.app.use(this.authPath, require('../routes/auth'));
+        this.app.use(this.proveedorPath, require('../routes/proveedor'));  // Proveedor
+        this.app.use(this.compraPath, require('../routes/compra'));        // Compra
+        this.app.use(this.bajaProductoPath, require('../routes/bajaproducto'));  // Baja de Productos
+        this.app.use(this.insumoPath, require('../routes/insumo'));        // Insumo
         this.app.use(this.clientesPath, require('../routes/clienteRoutes')); // Usar la ruta de clientes
         this.app.use(this.empleadosPath, require('../routes/empleadoRoutes')); // Usar la ruta de empleados
         this.app.use(this.citasPath, require('../routes/citaRoutes')); // Agregar ruta para citas
-
     }
 
     async connectDb() {

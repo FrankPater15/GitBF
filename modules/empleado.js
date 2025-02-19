@@ -9,6 +9,11 @@ const EmpleadoSchema = Schema({
         type: String,
         required: true
     },
+    correoempleado: {
+        type: String,
+        required: true,
+        unique: true // Asegura que no haya duplicados del correo del empleado
+    },
     telefonoempleado: {
         type: String,
         required: true

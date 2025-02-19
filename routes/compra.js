@@ -1,20 +1,32 @@
 const express = require('express');
+const {
+    crearCompra,
+    obtenerCompras,
+    obtenerCompraPorId,
+    actualizarCompra,
+    eliminarCompra
+} = require('../controllers/compra'); // Asegúrate de que la ruta sea correcta
+
+const { validarJWT } = require('../middlewares/verificartoken'); // Asegúrate de que la ruta sea correcta
+const verificarPermisos = require('../middlewares/verificarPermisos'); // Asegúrate de que la ruta sea correcta
+
 const router = express.Router();
-const { obtenerCompras, crearCompra, actualizarCompra, eliminarCompra, cambiarEstadoCompra } = require('../controllers/compra');
 
-// Obtener todas las compras
-router.get('/', obtenerCompras);
+router.use(validarJWT);
 
-// Crear una nueva compra
-router.post('/', crearCompra);
+// Ruta para crear una nueva compra
+router.post('/', verificarPermisos(['crearCompras']), crearCompra);
 
-// Actualizar una compra por ID
-router.put('/:id', actualizarCompra);
+// Ruta para obtener todas las compras
+router.get('/', verificarPermisos(['verCompras']), obtenerCompras);
 
-// Eliminar una compra por ID
-router.delete('/:id', eliminarCompra);
+// Ruta para obtener una compra por ID
+router.get('/:id', verificarPermisos(['verCompras']), obtenerCompraPorId);
 
-// Cambiar el estado de una compra por ID
-router.patch('/:id/estado', cambiarEstadoCompra);
+// Ruta para actualizar una compra
+router.put('/:id', verificarPermisos(['actualizarCompras']), actualizarCompra);
+
+// Ruta para eliminar una compra
+router.delete('/:id', verificarPermisos(['eliminarCompras']), eliminarCompra);
 
 module.exports = router;
